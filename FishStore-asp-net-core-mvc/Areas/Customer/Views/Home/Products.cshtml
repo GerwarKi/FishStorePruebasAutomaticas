@@ -1,0 +1,125 @@
+﻿@model FishStore.Models.ViewModels.ProductsViewModel
+
+@{
+    ViewData["Title"] = "Products";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1 class="text-center" style="padding-top:90px;">Os Melhores Produtos Para Seu Aquário</h1>
+<br />
+
+<div class="pb-3" style="display:inline-block; width:100%; text-align:center;color: #1ebba3; color: #1ebba3;">
+    <i class="fab fa-pagelines" style="transform: scale3d(-2,2,2); margin-right: 15px;"></i>
+    <i class="fas fa-fish" style="color: #1ebba3; transform: scale(2); margin-right:15px;"></i>
+    <i class="fab fa-pagelines" style="color: #1ebba3; transform: scale(2);"></i>
+</div>
+
+
+
+
+
+<div class="jumbotron pt-3">
+
+    <div class="text-center mt-0 mb-1">
+        <span class="fa-stack fa-2x">
+            <i class="fas fa-square fa-stack-2x"></i>
+            <i class="fas fa-filter fa-stack-1x fa-inverse"></i>
+        </span>
+    </div>
+
+    <div class="row border-bottom border-secondary" style="border-color:darkslategray">
+        <div class="col-md-6 col-sm-12">
+            <h5 class="font-weight-bold text-center">CATEGORIAS</h5>
+            <ul id="store-filters" class="list-inline text-center">
+                <li class="active btn btn-outline-dark rounded-0" data-filter=".store-items">Todos</li>
+                @foreach (var item in Model.Category)
+                {
+                    <li class="btn btn-outline-dark rounded-0" data-filter=".@item.Name.Replace(" ",string.Empty)">@item.Name</li>
+                }
+            </ul>
+        </div>
+        <div class="col-md-4 offset-md-1 col-sm-12">
+            <h5 class="font-weight-bold text-center">PREÇO</h5>
+            <div id="price-slider"></div>
+            <p id="PriceSelectedValue" class="font-weight-bold"></p>
+        </div>
+    </div>
+
+    <div id="menu-wrapper" class="container">
+        <partial name="_ThumbnailAreaPartial" model="@Model.StoreItem" />
+    </div>
+
+
+</div>
+
+@section Scripts {
+
+    <script>
+
+
+        (function ($) {
+            $("#store-filters li").click(function () {
+                $("#store-filters li").removeClass('active');
+                $(this).addClass('active');
+
+                var selectedFilter = $(this).data("filter");
+
+
+                $(".store-items").hide();
+
+                $(selectedFilter).show();
+                
+
+                var priceValue = priceSlider.noUiSlider.get();
+                $(selectedFilter).each(function () {
+                    var itemPrice = parseFloat($(this).data("price"));
+                    var priceFilterValue = parseFloat(priceValue);
+                    var itemName = $(this).data("name");
+                    if (itemPrice > priceFilterValue) {
+                        $(itemName).hide();
+                    }
+                });
+
+            });
+        })(jQuery);
+    </script>
+
+    <script>
+        var priceSlider = document.getElementById('price-slider');
+
+        noUiSlider.create(priceSlider, {
+            start: 450,
+            connect: 'lower',
+            range: {
+                'min': 20,
+                'max': 450
+            }
+        });
+
+        var priceValue = priceSlider.noUiSlider.get();
+        document.getElementById("PriceSelectedValue").innerHTML = "R$" + priceValue;
+
+        priceSlider.noUiSlider.on('change', function () {
+
+            var priceValue = priceSlider.noUiSlider.get();
+            document.getElementById("PriceSelectedValue").innerHTML = "R$" + priceValue;
+
+            var categoryName = $("#store-filters li.active").data("filter");
+            $(categoryName).show();
+
+            $(".store-items").each(function () {
+                var itemPrice = parseFloat($(this).data("price"));
+                var priceFilterValue = parseFloat(priceValue);
+                var itemName = $(this).data("name");
+                if (itemPrice > priceFilterValue) {
+                    $(itemName).hide();
+                }
+            });
+
+        });
+
+
+
+    </script>
+
+}

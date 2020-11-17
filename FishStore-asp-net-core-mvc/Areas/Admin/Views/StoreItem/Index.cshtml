@@ -1,0 +1,83 @@
+﻿@model IEnumerable<StoreItem>
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1 class="text-center" style="padding-top:90px">Itens da Loja</h1>
+<br />
+
+<div class="pb-3" style="display:inline-block; width:100%; text-align:center;color: #1ebba3; color: #1ebba3;">
+    <i class="fab fa-pagelines" style="transform: scale3d(-2,2,2); margin-right: 15px;"></i>
+    <i class="fas fa-fish" style="color: #1ebba3; transform: scale(2); margin-right:15px;"></i>
+    <i class="fab fa-pagelines" style="color: #1ebba3; transform: scale(2);"></i>
+</div>
+
+<div class="jumbotron">
+    <div class="container">
+        <div class="border bg-white rounded p-3">
+            <div class="row">
+                <div class="col-6">
+                    
+                </div>
+                <div class="col-6 text-right">
+                    <partial name="_CreateButtonPartial" />
+
+                </div>
+            </div>
+            <br />
+            <div>
+                @if (Model.Count() > 0)
+                {
+                    <table class="table table-striped border">
+
+                        <tr class="table-secondary">
+                            <th>
+                                @Html.DisplayNameFor(m => m.Name)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(m => m.Price)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(m => m.CategoryId)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(m => m.SubCategoryId)
+                            </th>
+                            <th></th>
+                            <th></th>
+                        </tr>
+
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td>
+                                    @Html.DisplayFor(m => item.Name)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(m => item.Price)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(m => item.Category.Name)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(m => item.SubCategory.Name)
+                                </td>
+                                <td>
+                                    <partial name="_TableButtonPartial" model="item.Id" />
+                                </td>
+                            </tr>
+                        }
+
+                    </table>
+                }
+                else
+                {
+                    <p>No item exists yet</p>
+                }
+            </div>
+        </div>
+        </div>
+    </div>
+
+
